@@ -1,0 +1,40 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sqlui-portal (with submodule)
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Dry-run release (test + build + smoke, no push)
+        # Validates whatever upstream SHA the PR pins. --dry-run skips the
+        # release-state inspection, push, tag, and gh release create. We just
+        # want to know that the pinned upstream code tests + builds + boots.
+        run: node scripts/release.js --dry-run --sha="$(git -C vendor/sqlui-native rev-parse HEAD)"
+
+      - name: Upload built tarball (PR preview)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sqlui-portal-preview-pr-${{ github.event.pull_request.number }}
+          path: dist/sqlui-portal*.tar.gz
+          retention-days: 7
+          if-no-files-found: warn

@@ -1,0 +1,3 @@
+[submodule "vendor/sqlui-native"]
+	path = vendor/sqlui-native
+	url = git@github.com:synle/sqlui-native.git
