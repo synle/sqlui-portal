@@ -76,7 +76,15 @@ paste directly. See [Releases](https://github.com/synle/sqlui-portal/releases)
 for older versions.
 
 <!-- release-version-block:start -->
-_No release has been cut yet — this block is auto-populated by `scripts/release.js`._
+**Latest:** `v3.1.4`
+
+```sh
+# curl + tar
+curl -fsSL https://github.com/synle/sqlui-portal/releases/download/v3.1.4/sqlui-portal-3.1.4.tar.gz | tar -xz && ./portal/sqlui-portal
+
+# npx
+npx https://github.com/synle/sqlui-portal/releases/download/v3.1.4/sqlui-portal-3.1.4.tar.gz
+```
 <!-- release-version-block:end -->
 
 Every release attaches both names: `sqlui-portal.tar.gz` (stable, always points
