@@ -102,13 +102,18 @@ stays on main — it is safe to leave; we never force-push.
 5. **The `gh release` is created with `--target <sha>`** so it is pinned to the
    exact commit even if `main` moves later.
 
-6. **README has a sentinel block** delimited by `<!-- release-version-block:start -->`
-   and `<!-- release-version-block:end -->`. The release script rewrites
-   everything between those markers each release so the copy-paste pinned-version
-   URLs always match the version being released. **Do not hand-edit the content
-   between the markers** — your changes will be overwritten. To change the
-   format of the generated block, edit `refreshReadmeVersionBlock()` in
-   `scripts/release.js`.
+6. **The README's Quick Start IS an auto-generated block** delimited by
+   `<!-- release-version-block:start -->` and `<!-- release-version-block:end -->`.
+   The release script rewrites everything between those markers each release so
+   the copy-paste install URLs always reflect the latest version. **Do not
+   hand-edit the content between the markers** — your changes will be
+   overwritten. To change the format of the generated block, edit
+   `refreshReadmeVersionBlock()` in `scripts/release.js`.
+
+7. **Only one tarball per release** — `sqlui-portal-<version>.tar.gz`. We do
+   not publish a stable `sqlui-portal.tar.gz` (it'd just be a byte-identical
+   duplicate). Users always get the version-explicit URL via the README's
+   auto-refreshed Quick Start.
 
 ## What lives upstream (not here)
 

@@ -256,15 +256,8 @@ async function main() {
   }
   const ourDist = path.join(ROOT, "dist");
   fs.mkdirSync(ourDist, { recursive: true });
-  // We attach TWO copies of the same tarball to the release:
-  //   - sqlui-portal-X.Y.Z.tar.gz  : versioned, for users who want to pin
-  //   - sqlui-portal.tar.gz        : stable name, resolvable via
-  //                                  /releases/latest/download/sqlui-portal.tar.gz
-  // This gives users a stable URL they can curl/npx without knowing the version.
-  const ourTarVersioned = path.join(ourDist, `sqlui-portal-${version}.tar.gz`);
-  const ourTarStable = path.join(ourDist, "sqlui-portal.tar.gz");
-  fs.copyFileSync(upstreamTar, ourTarVersioned);
-  fs.copyFileSync(upstreamTar, ourTarStable);
+  const ourTar = path.join(ourDist, `sqlui-portal-${version}.tar.gz`);
+  fs.copyFileSync(upstreamTar, ourTar);
   // Mirror the unpacked dist/portal/ for smoke + local inspection
   const upstreamPortalDir = path.join(SUBMODULE, "dist", "portal");
   if (fs.existsSync(upstreamPortalDir)) {
@@ -272,9 +265,8 @@ async function main() {
     fs.rmSync(ourPortalDir, { recursive: true, force: true });
     fs.cpSync(upstreamPortalDir, ourPortalDir, { recursive: true });
   }
-  setOutput("tar_path", path.relative(ROOT, ourTarVersioned));
-  log(`tarball: ${path.relative(ROOT, ourTarVersioned)} (${(fs.statSync(ourTarVersioned).size / 1024 / 1024).toFixed(2)} MB)`);
-  log(`stable: ${path.relative(ROOT, ourTarStable)}`);
+  setOutput("tar_path", path.relative(ROOT, ourTar));
+  log(`tarball: ${path.relative(ROOT, ourTar)} (${(fs.statSync(ourTar).size / 1024 / 1024).toFixed(2)} MB)`);
 
   // Phase 7: smoke test
   log(`smoke testing built bundle …`);
@@ -316,21 +308,16 @@ async function main() {
     log(`creating GitHub release ${tag} …`);
     const notes =
       `Portal bundle of [sqlui-native ${tag}](https://github.com/synle/sqlui-native/commit/${upstreamSha}).\n\n` +
-      `### Install — latest\n\n` +
+      `### Install\n\n` +
       "```sh\n" +
       `# curl + tar\n` +
-      `curl -fsSL https://github.com/synle/sqlui-portal/releases/latest/download/sqlui-portal.tar.gz | tar -xz && ./portal/sqlui-portal\n\n` +
+      `curl -fsSL https://github.com/synle/sqlui-portal/releases/download/${tag}/sqlui-portal-${version}.tar.gz | tar -xz && ./portal/sqlui-portal\n\n` +
       `# npx\n` +
-      `npx https://github.com/synle/sqlui-portal/releases/latest/download/sqlui-portal.tar.gz\n` +
-      "```\n\n" +
-      `### Install — pinned to ${tag}\n\n` +
-      "```sh\n" +
-      `curl -fsSL https://github.com/synle/sqlui-portal/releases/download/${tag}/sqlui-portal-${version}.tar.gz | tar -xz && ./portal/sqlui-portal\n` +
       `npx https://github.com/synle/sqlui-portal/releases/download/${tag}/sqlui-portal-${version}.tar.gz\n` +
       "```\n";
-    run("gh", ["release", "create", tag, ourTarVersioned, ourTarStable, "--repo", REPO, "--target", commitSha, "--title", tag, "--notes", notes]);
+    run("gh", ["release", "create", tag, ourTar, "--repo", REPO, "--target", commitSha, "--title", tag, "--notes", notes]);
     log(`release ${tag} published`);
-    appendSummary(`### ✅ Released: ${tag}\n\nUpstream: \`sqlui-native@${upstreamSha.slice(0, 7)}\`\nArtifacts: \`${path.basename(ourTarVersioned)}\`, \`${path.basename(ourTarStable)}\``);
+    appendSummary(`### ✅ Released: ${tag}\n\nUpstream: \`sqlui-native@${upstreamSha.slice(0, 7)}\`\nArtifact: \`${path.basename(ourTar)}\``);
   } catch (err) {
     console.error(`[release] release creation failed; deleting tag so the next run can retry cleanly`);
     spawnSync("git", ["push", "origin", `:refs/tags/${tag}`], { cwd: ROOT, stdio: "inherit" });

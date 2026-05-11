@@ -10,20 +10,15 @@ Storage, Salesforce, and REST API.
 
 ## 🚀 Quick start — pick one
 
-### curl + tar (no Node manager needed beyond `node` on PATH)
+The block below is auto-refreshed by the release script each time we cut a
+release. Copy & paste directly. For older versions, see
+[Releases](https://github.com/synle/sqlui-portal/releases).
 
-```sh
-curl -fsSL https://github.com/synle/sqlui-portal/releases/latest/download/sqlui-portal.tar.gz \
-  | tar -xz \
-  && ./portal/sqlui-portal ./mydata.sqlite
-```
+<!-- release-version-block:start -->
+_No release has been cut yet — this block is auto-populated by `scripts/release.js`._
+<!-- release-version-block:end -->
 
-### npx (zero install, runs and exits)
-
-```sh
-npx https://github.com/synle/sqlui-portal/releases/latest/download/sqlui-portal.tar.gz \
-  ./mydata.sqlite
-```
+---
 
 Either flow accepts:
 
@@ -36,8 +31,6 @@ The portal binds to `0.0.0.0:19378` by default and auto-opens your browser. Use
 `--host 127.0.0.1` to restrict to loopback or `--port <n>` to pick a different
 port.
 
----
-
 ## Examples
 
 ```sh
@@ -48,7 +41,7 @@ port.
 ./portal/sqlui-portal --host 127.0.0.1 --port 8080 "postgres://app:secret@db.local:5432/orders"
 
 # Mix multiple connections in one session
-npx https://github.com/synle/sqlui-portal/releases/latest/download/sqlui-portal.tar.gz \
+./portal/sqlui-portal \
   ./mydata.sqlite \
   "mysql://root:pw@127.0.0.1/wiki" \
   "mongodb://localhost:27017/logs"
@@ -67,20 +60,6 @@ npx https://github.com/synle/sqlui-portal/releases/latest/download/sqlui-portal.
       --version      Print version and exit.
       --help         Print full usage.
 ```
-
-## Pinning to a specific version
-
-The latest-download URL above always serves the newest release. The URLs below
-are auto-refreshed by the release script each time we cut a release — copy &
-paste directly. See [Releases](https://github.com/synle/sqlui-portal/releases)
-for older versions.
-
-<!-- release-version-block:start -->
-_No release has been cut yet — this block is auto-populated by `scripts/release.js`._
-<!-- release-version-block:end -->
-
-Every release attaches both names: `sqlui-portal.tar.gz` (stable, always points
-at the latest) and `sqlui-portal-<version>.tar.gz` (versioned).
 
 ## Storage
 

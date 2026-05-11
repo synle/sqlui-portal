@@ -57,6 +57,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sqlui-portal-${{ steps.release.outputs.version }}
-          path: dist/sqlui-portal*.tar.gz
+          path: dist/sqlui-portal-*.tar.gz
           retention-days: 30
           if-no-files-found: error

@@ -35,6 +35,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sqlui-portal-preview-pr-${{ github.event.pull_request.number }}
-          path: dist/sqlui-portal*.tar.gz
+          path: dist/sqlui-portal-*.tar.gz
           retention-days: 7
           if-no-files-found: warn
