@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "Branch / tag / SHA in synle/sqlui-native to release from"
+        type: string
+        default: main
+  schedule:
+    # Weekly, Mondays 13:00 UTC. Default --sha=main → releases latest upstream main.
+    # If a clean release already exists for upstream's current version, the script
+    # exits 0 with a "skip" log line — no commit, no tag, no release. To re-release,
+    # upstream must bump its package.json version first.
+    - cron: "0 13 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sqlui-portal (with submodule)
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run release script
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SHA="${{ inputs.sha }}"
+          # Schedule runs have no inputs — fall back to main.
+          SHA="${SHA:-main}"
+          node scripts/release.js --sha="$SHA"
+
+      - name: Upload tarball as workflow artifact (buffer)
+        if: steps.release.outputs.skipped == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sqlui-portal-${{ steps.release.outputs.version }}
+          path: dist/sqlui-portal-*.tar.gz
+          retention-days: 30
+          if-no-files-found: error

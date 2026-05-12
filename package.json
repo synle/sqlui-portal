@@ -1,0 +1,17 @@
+{
+  "name": "sqlui-portal-release",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Release coordinator for the sqlui-portal bundle (web portal distribution of sqlui-native). Version is intentionally fixed at 0.0.0 — release tags are sourced from vendor/sqlui-native/package.json at release time.",
+  "scripts": {
+    "release": "node scripts/release.js",
+    "release:dry": "node scripts/release.js --dry-run",
+    "smoke": "node scripts/smoke.js"
+  },
+  "repository": "https://github.com/synle/sqlui-portal",
+  "license": "MIT",
+  "author": {
+    "name": "Sy Le",
+    "email": "le.nguyen.sy@gmail.com"
+  }
+}
