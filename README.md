@@ -15,14 +15,14 @@ release. Copy & paste directly. For older versions, see
 [Releases](https://github.com/synle/sqlui-portal/releases).
 
 <!-- release-version-block:start -->
-**Latest:** `v3.1.14`
+**Latest:** `v4.11.0`
 
 ```sh
 # curl + tar
-curl -fsSL https://github.com/synle/sqlui-portal/releases/download/v3.1.14/sqlui-portal-3.1.14.tar.gz | tar -xz && ./portal/sqlui-portal
+curl -fsSL https://github.com/synle/sqlui-portal/releases/download/v4.11.0/sqlui-portal-4.11.0.tar.gz | tar -xz && ./portal/sqlui-portal
 
 # npx
-npx https://github.com/synle/sqlui-portal/releases/download/v3.1.14/sqlui-portal-3.1.14.tar.gz
+npx https://github.com/synle/sqlui-portal/releases/download/v4.11.0/sqlui-portal-4.11.0.tar.gz
 ```
 <!-- release-version-block:end -->
 
